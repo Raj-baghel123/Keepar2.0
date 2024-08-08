@@ -5,13 +5,15 @@ import Note from "./Note";
 import CreateArea from "./CreateArea";
 import axios from "axios";
 
+const BASE_URL = process.env.REACT_APP_URL;
+
 function App() {
   const [notes, setNotes] = useState([]);
 
   useEffect(() => {
     async function fetchNotes() {
       try {
-        const response = await axios.get('http://localhost:5000/notes');
+        const response = await axios.get(`${BASE_URL}/notes`, { withCredentials: true });
         setNotes(response.data);
       } catch (error) {
         console.error("There was an error fetching the notes!", error);
@@ -22,7 +24,8 @@ function App() {
 
   async function addNote(newNote) {
     try {
-      const response = await axios.post('http://localhost:5000/notes', newNote);
+      console.log(BASE_URL)
+      const response = await axios.post(`${BASE_URL}/notes`, newNote, { withCredentials: true });
       console.log(response.data)
       setNotes((prevNotes) => [...prevNotes, response.data]);
     } catch (error) {
@@ -32,7 +35,7 @@ function App() {
 
   async function deleteNote(id) {
     try {
-      await axios.delete(`http://localhost:5000/notes/${id}`);
+      await axios.delete(`${BASE_URL}/notes/${id}`, { withCredentials: true });
       
       setNotes((prevNotes) => prevNotes.filter((noteItem) => {
         //console.log(noteItem._id)
